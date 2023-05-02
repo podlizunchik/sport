@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class MySqlDaoFactory implements DaoFactory {
 
     private String loginDB = "root";
-    private String passwordDB = "1234";
+    private String passwordDB = "lomako1234";
     private String url = "jdbc:mysql://localhost/registrationdb";
     private String DB = "registrationdb";
     protected Connection dbConnection = null;

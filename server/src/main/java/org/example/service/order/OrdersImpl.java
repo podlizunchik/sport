@@ -17,7 +17,7 @@ import java.sql.Statement;
 public class OrdersImpl extends MySqlDaoFactory implements Orders {
 
     private static OrdersImpl ordersImpl;
-    private static Order order;
+    private static Order order = new Order();
 
     public static synchronized OrdersImpl getInstance() {
         if (ordersImpl == null) {
@@ -28,6 +28,60 @@ public class OrdersImpl extends MySqlDaoFactory implements Orders {
 
     private static Connection dbConnection = null;
     private static Statement statement = null;
+
+    @Override
+    public String selectRecordFromOrderTableForStatistics() throws SQLException {
+        String res = "";
+        int countProt = 0;
+        int countCrea = 0;
+        int countAmin = 0;
+        int countBCAA = 0;
+        int countJiro = 0;
+        int countGein = 0;
+        int countEner = 0;
+        int countVita = 0;
+        String selectTableSQL = "SELECT type FROM orders";
+        try (Connection dbConnection = getConnection(); Statement statement = dbConnection.createStatement()) {
+            ResultSet rs = statement.executeQuery(selectTableSQL);
+            while (rs.next()) {
+                String type = rs.getString("type");
+                if (type.equals("Протеины")) {
+                    countProt++;
+                }
+                if (type.equals("Креатины")) {
+                    countCrea++;
+                }
+                if (type.equals("Аминокислоты")) {
+                    countAmin++;
+                }
+                if (type.equals("BCAA")) {
+                    countBCAA++;
+                }
+                if (type.equals("Жиросжигатели")) {
+                    countJiro++;
+                }
+                if (type.equals("Гейнеры")) {
+                    countGein++;
+                }
+                if (type.equals("Энергетики")) {
+                    countEner++;
+                }
+                if (type.equals("ВитаминныеКомплексы")) {
+                    countVita++;
+                }
+            }
+            res = countProt + " " + countCrea + " " + countAmin + " " +
+                    countBCAA + " " + countJiro + " " + countGein + " " +
+                    countEner + " " + countVita;
+
+        } catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return res;
+    }
 
     @Override
     public void insertRecordIntoOrderTable(String clientMessageRecieved) throws SQLException {
@@ -274,6 +328,200 @@ public class OrdersImpl extends MySqlDaoFactory implements Orders {
         }
         if (flag == 0) System.out.println("Ошибка добавления");
         else System.out.println("Данные успешно добавлены");
+    }
+
+    @Override
+    public String selectRecordFromOrderTable() throws SQLException {
+
+        Connection dbConnection = null;
+        Statement statement = null;
+        String selectTableSQL = "SELECT * FROM orders";
+        String result = "";
+        try {
+            dbConnection = getConnection();
+            statement = dbConnection.createStatement();
+            ResultSet rs = statement.executeQuery(selectTableSQL);
+            while (rs.next()) {
+                order.setId(rs.getString("id"));
+                order.setRegion(rs.getString("region"));
+                order.setType(rs.getString("type"));
+                order.setName(rs.getString("name"));
+                order.setNumberOfPackages(rs.getString("numberOfPackages"));
+                order.setWeightOfPacking(rs.getString("weightOfPacking"));
+                order.setTaste(rs.getString("taste"));
+                order.setDelivery(rs.getString("delivery"));
+                order.setOrderCost(rs.getString("orderCost"));
+                order.setStatus(rs.getString("status"));
+
+                String id = rs.getString("id");
+                String region = rs.getString("region");
+                String type = rs.getString("type");
+                String name = rs.getString("name");
+                String numberOfPackages = rs.getString("numberOfPackages");
+                String weightOfPacking = rs.getString("weightOfPacking");
+                String taste = rs.getString("taste");
+                String delivery = rs.getString("delivery");
+                String cost = rs.getString("orderCost");
+                String status = rs.getString("status");
+                result += id + " " + region + " " + type + " " + name + " " + numberOfPackages + " " +
+                        weightOfPacking + " " + taste + " " + delivery + " " + cost + " " + status + " ";
+            }
+
+        } catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+
+        } finally {
+
+            if (statement != null) {
+                statement.close();
+            }
+
+            if (dbConnection != null) {
+                dbConnection.close();
+            }
+
+        }
+        return result;
+    }
+
+    @Override
+    public boolean processOrders(String clientMessageRecieved) throws SQLException {
+
+        int flag = 0;
+        int flagAdd = 0;
+        int flagThree = 0;
+        int flagBool = 0;
+        String[] message = clientMessageRecieved.split(" ");
+        String number = message[1];
+        String status = "Обработан";
+        String name = "Продан";
+        String idNumProduct = "";
+        String idNumOrder = "";
+        String resNum = "";
+        String nameFromOrders = "";
+        String nameFromProduct = "";
+        String selectTableSQL = "SELECT id FROM orders";
+        String updateTableSQL = "UPDATE `registrationdb`.`orders` SET `name`='" + name + "'" +
+                ", `status`='" + status + "'" + " WHERE `id` = '" + number + "'";
+        String selectAddTableSQL = "SELECT status, name FROM orders WHERE id ='" + number + "'";
+        String selectNameFromProduct = "SELECT name FROM product";
+        String selectNameFromOrders = "SELECT name FROM orders WHERE id = '" + number + "'";
+        try {
+            dbConnection = getConnection();
+            statement = dbConnection.createStatement();
+            ResultSet rs = statement.executeQuery(selectNameFromOrders);
+            while (rs.next()) {
+                nameFromOrders = rs.getString("name");
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            dbConnection = getConnection();
+            statement = dbConnection.createStatement();
+            ResultSet rs = statement.executeQuery(selectNameFromProduct);
+            while (rs.next()) {
+                nameFromProduct = rs.getString("name");
+                if (nameFromOrders.equals(nameFromProduct)) {
+                    flagThree = 1;
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        if (flagThree == 1) {
+            try {
+                dbConnection = getConnection();
+                statement = dbConnection.createStatement();
+                ResultSet rs = statement.executeQuery(selectAddTableSQL);
+                while (rs.next()) {
+                    String addStatus = rs.getString("status");
+                    String addName = rs.getString("name");
+                    if (status.equals(addStatus) && name.equals(addName)) {
+                        flagAdd = 0;
+                        break;
+                    } else {
+                        flagAdd = 1;
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            if (flagAdd == 1) {
+                try {
+                    String selectFromProduct = "SELECT numberOfPackages FROM product WHERE name = '" + nameFromProduct + "'";
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectFromProduct);
+                    while (rs.next()) {
+                        idNumProduct += rs.getString("numberOfPackages");
+                    }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+
+                }
+                try {
+                    String selectFromOrders = "SELECT numberOfPackages FROM orders WHERE name = '" + nameFromOrders + "'";
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectFromOrders);
+                    while (rs.next()) {
+                        idNumOrder += rs.getString("numberOfPackages");
+                        int idNumProductInt = Integer.parseInt(idNumProduct);
+                        int idNumOrderInt = Integer.parseInt(idNumOrder);
+                        int res = idNumProductInt - idNumOrderInt;
+                        if (res <= 0) {
+                            flagBool = 0;
+                            break;
+                        } else flagBool = 1;
+                        resNum = Integer.toString(res);
+                    }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+
+                }
+                if (flagBool == 1) {
+                    try {
+                        dbConnection = getConnection();
+                        statement = dbConnection.createStatement();
+                        ResultSet rs = statement.executeQuery(selectTableSQL);
+                        while (rs.next()) {
+                            String idTable = rs.getString("id");
+                            if (number.equals(idTable)) {
+                                flag = 1;
+                                break;
+                            }
+                        }
+                        if (flag == 1) {
+                            statement.execute(updateTableSQL);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+
+                    }
+                    try {
+                        String updateProduct = "UPDATE `registrationdb`.`product` SET `numberOfPackages`='" + resNum + "'" + " WHERE `name` = '" + nameFromProduct + "'";
+                        dbConnection = getConnection();
+                        statement = dbConnection.createStatement();
+                        statement.execute(updateProduct);
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+
+                    } finally {
+                        if (statement != null) {
+                            statement.close();
+                        }
+                        if (dbConnection != null) {
+                            dbConnection.close();
+                        }
+                    }
+                }
+            }
+        }
+        return flag != 0;
     }
 }
 

@@ -1,10 +1,11 @@
 package org.example.page;
 
 import org.example.Client;
-import org.example.frame.general.FrameAddProduct;
-import org.example.frame.general.FrameChangeProduct;
-import org.example.frame.general.FrameDeleteProduct;
-import org.example.frame.general.FramePrintProductAdmin;
+import org.example.frame.business.FrameDisplayOfStatistics;
+import org.example.frame.business.FrameOrderProcessing;
+import org.example.frame.general.*;
+import org.example.frame.save.FrameSaveProduct;
+import org.example.frame.search.FrameSearchProductAdmin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +18,16 @@ public class Admin extends Client {
     private JButton jButtonDeleteProduct = null;
     private JButton jButtonChangeProduct = null;
     private JButton jButtonPrintProductAdmin = null;
+    private JButton jButtonSearchProductAdmin = null;
+    private JButton jButtonSaveProduct = null;
+    private JButton jButtonPrintOrder = null;
+    private JButton jButtonOrderProcessing = null;
+    private JButton jButtonDisplayStatistics = null;
 
     private JButton getJButtonBackAdmin() {
         if (jButtonBackAdmin == null) {
             jButtonBackAdmin = new JButton();
-            jButtonBackAdmin.setBounds(new Rectangle(100, 260, 200, 40));
+            jButtonBackAdmin.setBounds(new Rectangle(100, 460, 200, 40));
             jButtonBackAdmin.setText("Назад");
             jButtonBackAdmin.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -116,6 +122,106 @@ public class Admin extends Client {
         return jButtonPrintProductAdmin;
     }
 
+    private JButton getJButtonSearchProductAdmin() {
+        if (jButtonSearchProductAdmin == null) {
+            jButtonSearchProductAdmin = new JButton();
+            jButtonSearchProductAdmin.setBounds(new Rectangle(100, 210, 200, 40));
+            jButtonSearchProductAdmin.setText("Поиск");
+            jButtonSearchProductAdmin.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Admin.this.dispose();
+                            FrameSearchProductAdmin frameSearchProductAdmin = new FrameSearchProductAdmin();
+                            frameSearchProductAdmin.searchProductAdmin();
+                        }
+                    });
+                }
+            });
+        }
+        return jButtonSearchProductAdmin;
+    }
+
+    private JButton getJButtonPrintOrder() {
+        if (jButtonPrintOrder == null) {
+            jButtonPrintOrder = new JButton();
+            jButtonPrintOrder.setBounds(new Rectangle(100, 310, 200, 40));
+            jButtonPrintOrder.setText("Просмотреть заказы");
+            jButtonPrintOrder.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Admin.this.dispose();
+                            FramePrintOrderAdmin framePrintOrderAdmin = new FramePrintOrderAdmin();
+                            framePrintOrderAdmin.printOrderAdmin();
+                        }
+                    });
+                }
+            });
+        }
+        return jButtonPrintOrder;
+    }
+
+    private JButton getJButtonSaveProduct() {
+        if (jButtonSaveProduct == null) {
+            jButtonSaveProduct = new JButton();
+            jButtonSaveProduct.setBounds(new Rectangle(100, 260, 200, 40));
+            jButtonSaveProduct.setText("Сохранение");
+            jButtonSaveProduct.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Admin.this.dispose();
+                            FrameSaveProduct frameSaveProduct = new FrameSaveProduct();
+                            frameSaveProduct.saveProduct();
+                        }
+                    });
+                }
+            });
+        }
+        return jButtonSaveProduct;
+    }
+
+    private JButton getJButtonOrderProcessing() {
+        if (jButtonOrderProcessing == null) {
+            jButtonOrderProcessing = new JButton();
+            jButtonOrderProcessing.setBounds(new Rectangle(100, 360, 200, 40));
+            jButtonOrderProcessing.setText("Обработка заказа");
+            jButtonOrderProcessing.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Admin.this.dispose();
+                            FrameOrderProcessing frameOrderProcessing = new FrameOrderProcessing();
+                            frameOrderProcessing.processOrderAdmin();
+                        }
+                    });
+                }
+            });
+        }
+        return jButtonOrderProcessing;
+    }
+
+    private JButton getJButtonDisplayStatistics() {
+        if (jButtonDisplayStatistics == null) {
+            jButtonDisplayStatistics = new JButton();
+            jButtonDisplayStatistics.setBounds(new Rectangle(100, 410, 200, 40));
+            jButtonDisplayStatistics.setText("Статистика заказов");
+            jButtonDisplayStatistics.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Admin.this.dispose();
+                            FrameDisplayOfStatistics frameDisplayOfStatistics = new FrameDisplayOfStatistics();
+                            frameDisplayOfStatistics.displayStatistics();
+                        }
+                    });
+                }
+            });
+        }
+        return jButtonDisplayStatistics;
+    }
+
     public static void initWindowAdmin() {
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -134,7 +240,7 @@ public class Admin extends Client {
     }
 
     private void initialize() {
-        this.setSize(400, 350);
+        this.setSize(400, 550);
         this.setResizable(false);
         this.setContentPane(getJContentPane());
         this.setTitle("Меню администратора");
@@ -149,6 +255,11 @@ public class Admin extends Client {
             jContentPaneAdmin.add(getJButtonDeleteProduct(), null);
             jContentPaneAdmin.add(getJButtonChangeProduct(), null);
             jContentPaneAdmin.add(getJButtonPrintProductAdmin(), null);
+            jContentPaneAdmin.add(getJButtonSearchProductAdmin(), null);
+            jContentPaneAdmin.add(getJButtonSaveProduct(), null);
+            jContentPaneAdmin.add(getJButtonPrintOrder(), null);
+            jContentPaneAdmin.add(getJButtonOrderProcessing(), null);
+            jContentPaneAdmin.add(getJButtonDisplayStatistics(), null);
         }
         return jContentPaneAdmin;
     }

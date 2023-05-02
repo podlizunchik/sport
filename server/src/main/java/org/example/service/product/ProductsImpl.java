@@ -18,7 +18,7 @@ import java.sql.Statement;
 public class ProductsImpl extends MySqlDaoFactory implements Products {
 
     private static ProductsImpl productsImpl;
-    private static Product product;
+    private static Product product = new Product();
 
     public static synchronized ProductsImpl getInstance() {
         if (productsImpl == null) {
@@ -257,4 +257,166 @@ public class ProductsImpl extends MySqlDaoFactory implements Products {
         }
         return result;
     }
+
+    @Override
+    public String selectRecordFromProductTableForSearch(String clientMessageRecieved) {
+        String[] message = clientMessageRecieved.split(" ");
+        String searchID = message[1];
+        int searchIntID = Integer.parseInt(searchID);
+        String searchData = message[2];
+        String result = "";
+        switch (searchIntID) {
+            case 1: {
+                String selectTableSQL = "SELECT * FROM product WHERE type LIKE '%" + searchData + "%'";
+                try {
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectTableSQL);
+                    while (rs.next()) {
+                        String id = rs.getString("id");
+                        String type = rs.getString("type");
+                        String name = rs.getString("name");
+                        String price = rs.getString("price");
+                        String numberOfPackages = rs.getString("numberOfPackages");
+                        String weightOfPacking = rs.getString("weightOfPacking");
+                        String manufacturer = rs.getString("manufacturer");
+                        String accountingDiscounts = rs.getString("accountingDiscounts");
+                        result += id + " " + type + " " + name + " " + price + " " + numberOfPackages + " " +
+                                weightOfPacking + " " + manufacturer + " " + accountingDiscounts + " ";
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+            case 2: {
+                String selectTableSQL = "SELECT * FROM product WHERE name LIKE '%" + searchData + "%'";
+                try {
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectTableSQL);
+                    while (rs.next()) {
+                        String id = rs.getString("id");
+                        String type = rs.getString("type");
+                        String name = rs.getString("name");
+                        String price = rs.getString("price");
+                        String numberOfPackages = rs.getString("numberOfPackages");
+                        String weightOfPacking = rs.getString("weightOfPacking");
+                        String manufacturer = rs.getString("manufacturer");
+                        String accountingDiscounts = rs.getString("accountingDiscounts");
+                        result += id + " " + type + " " + name + " " + price + " " + numberOfPackages + " " +
+                                weightOfPacking + " " + manufacturer + " " + accountingDiscounts + " ";
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+            case 3: {
+                String selectTableSQL = "SELECT * FROM product WHERE price LIKE '%" + searchData + "%'";
+                try {
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectTableSQL);
+                    while (rs.next()) {
+                        String id = rs.getString("id");
+                        String type = rs.getString("type");
+                        String name = rs.getString("name");
+                        String price = rs.getString("price");
+                        String numberOfPackages = rs.getString("numberOfPackages");
+                        String weightOfPacking = rs.getString("weightOfPacking");
+                        String manufacturer = rs.getString("manufacturer");
+                        String accountingDiscounts = rs.getString("accountingDiscounts");
+                        result += id + " " + type + " " + name + " " + price + " " + numberOfPackages + " " +
+                                weightOfPacking + " " + manufacturer + " " + accountingDiscounts + " ";
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+            case 4: {
+                String selectTableSQL = "SELECT * FROM product WHERE numberOfPackages LIKE '%" + searchData + "%'";
+                try {
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectTableSQL);
+                    while (rs.next()) {
+                        String id = rs.getString("id");
+                        String type = rs.getString("type");
+                        String name = rs.getString("name");
+                        String price = rs.getString("price");
+                        String numberOfPackages = rs.getString("numberOfPackages");
+                        String weightOfPacking = rs.getString("weightOfPacking");
+                        String manufacturer = rs.getString("manufacturer");
+                        String accountingDiscounts = rs.getString("accountingDiscounts");
+                        result += id + " " + type + " " + name + " " + price + " " + numberOfPackages + " " +
+                                weightOfPacking + " " + manufacturer + " " + accountingDiscounts + " ";
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+            case 5: {
+                String selectTableSQL = "SELECT * FROM product WHERE weightOfPacking LIKE '%" + searchData + "%'";
+                try {
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectTableSQL);
+                    while (rs.next()) {
+                        String id = rs.getString("id");
+                        String type = rs.getString("type");
+                        String name = rs.getString("name");
+                        String price = rs.getString("price");
+                        String numberOfPackages = rs.getString("numberOfPackages");
+                        String weightOfPacking = rs.getString("weightOfPacking");
+                        String manufacturer = rs.getString("manufacturer");
+                        String accountingDiscounts = rs.getString("accountingDiscounts");
+                        result += id + " " + type + " " + name + " " + price + " " + numberOfPackages + " " +
+                                weightOfPacking + " " + manufacturer + " " + accountingDiscounts + " ";
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+            case 6: {
+                String selectTableSQL = "SELECT * FROM product WHERE manufacturer LIKE '%" + searchData + "%'";
+                try {
+                    dbConnection = getConnection();
+                    statement = dbConnection.createStatement();
+                    ResultSet rs = statement.executeQuery(selectTableSQL);
+                    while (rs.next()) {
+                        String id = rs.getString("id");
+                        String type = rs.getString("type");
+                        String name = rs.getString("name");
+                        String price = rs.getString("price");
+                        String numberOfPackages = rs.getString("numberOfPackages");
+                        String weightOfPacking = rs.getString("weightOfPacking");
+                        String manufacturer = rs.getString("manufacturer");
+                        String accountingDiscounts = rs.getString("accountingDiscounts");
+                        result += id + " " + type + " " + name + " " + price + " " + numberOfPackages + " " +
+                                weightOfPacking + " " + manufacturer + " " + accountingDiscounts + " ";
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            }
+            default: {
+                System.out.println("Введено неверное значение!!!");
+                break;
+            }
+        }
+        return result;
+    }
+
+
 }

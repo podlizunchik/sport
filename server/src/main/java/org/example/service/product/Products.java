@@ -13,4 +13,6 @@ public interface Products {
     boolean changeRecordIntoProductTable(String clientMessageRecieved) throws SQLException;
 
     String selectRecordFromProductTable() throws SQLException;
+
+    String selectRecordFromProductTableForSearch(String clientMessageRecieved)throws SQLException;
 }

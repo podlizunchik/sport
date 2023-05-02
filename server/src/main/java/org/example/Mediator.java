@@ -1,14 +1,18 @@
 package org.example;
 
+import org.example.db.DaoFactory;
+import org.example.db.MySqlDaoFactory;
 import org.example.service.auth.authorization.AuthorizationServiceImpl;
 import org.example.service.auth.registration.RegistrationServiceImpl;
 import org.example.service.order.OrdersImpl;
 import org.example.service.product.ProductsImpl;
+import org.example.service.file.FilesServiceImpl;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Mediator {
@@ -106,6 +110,27 @@ public class Mediator {
                     }
                     break;
                 }
+                case 7: {
+                    String result;
+                    result = ProductsImpl.getInstance().selectRecordFromProductTableForSearch(clientMessageRecieved);
+                    output.writeObject(result);
+                    break;
+                }
+                case 8: {
+                    try {
+                        boolean boolOne, boolTwo, boolThree;
+                        boolOne = FilesServiceImpl.getInstance().writeInFileForRegistration();
+                        boolTwo = FilesServiceImpl.getInstance().writeInFileForProduct();
+                        boolThree = FilesServiceImpl.getInstance().writeInFileForOrders();
+                        if (boolOne == true && boolTwo == true && boolThree == true) {
+                            autoMessage = "Данные успешно сохранены!!!  1";
+                        } else autoMessage = "Ошибка сохранения!!!  0";
+                        output.writeObject(autoMessage);
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                }
                 case 9: {
                     String res = "";
                     int flag = 0;
@@ -123,6 +148,39 @@ public class Mediator {
                                     "либо Ваш заказ уже находится в обработке 0";
                         }
                         output.writeObject(autoMessage);
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                }
+                case 10: {
+                    try {
+                        String result;
+                        result = OrdersImpl.getInstance().selectRecordFromOrderTable();
+                        output.writeObject(result);
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                }
+                case 11: {
+                    try {
+                        boolean bool;
+                        bool = OrdersImpl.getInstance().processOrders(clientMessageRecieved);
+                        if (bool == true) {
+                            autoMessage = "Данные успешно обработаны!!!  1";
+                        } else autoMessage = "Возникла ошибка про обработке  0";
+                        output.writeObject(autoMessage);
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                }
+                case 12: {
+                    try {
+                        String result;
+                        result = OrdersImpl.getInstance().selectRecordFromOrderTableForStatistics();
+                        output.writeObject(result);
                     } catch (SQLException e) {
                         System.out.println(e.getMessage());
                     }
